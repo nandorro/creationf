@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GENERADO por tools/gen.js - no editar a mano -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_app"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Material.NoActionBar"
+        android:usesCleartextTraffic="false">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ProxyActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity-alias
+            android:name=".Alias0"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_0"
+            android:label="Servidor">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Alias1"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_1"
+            android:label="Correo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Alias2"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_2"
+            android:label="Nube">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Alias3"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_3"
+            android:label="Base de datos">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Alias4"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_4"
+            android:label="Seguridad">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Alias5"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_5"
+            android:label="Terminal">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Alias6"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_6"
+            android:label="Red / WiFi">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Alias7"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_7"
+            android:label="Monitorización">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Alias8"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_8"
+            android:label="Archivos">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Alias9"
+            android:targetActivity=".ProxyActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_9"
+            android:label="Código / Git">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+    </application>
+</manifest>
