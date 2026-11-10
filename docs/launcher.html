@@ -137,24 +137,15 @@ button,a.b{display:block;width:100%;padding:14px;border-radius:14px;font:inherit
             "[IO.File]::WriteAllText($f,$t,[Text.Encoding]::Default)";
           var bat = ['@echo off', 'powershell -NoProfile -ExecutionPolicy Bypass -Command "' + ps + '"',
             'echo Acceso "' + seguro + '" creado en el escritorio.', 'timeout /t 3 >nul', 'exit /b',
-            '::N ' + b64(seguro), '::U ' + b64(u), ico ? '::I ' + ico : ''].join('
-') + '
-';
+            '::N ' + b64(seguro), '::U ' + b64(u), ico ? '::I ' + ico : ''].join('\r\n') + '\r\n';
           baja('Crear acceso - ' + seguro + '.bat', 'application/octet-stream', bat);
           $('dhow').innerHTML = '<p><b>Abre el archivo descargado</b> (.bat) y el acceso aparecerá en tu escritorio con el icono elegido. Si Windows avisa: <b>Más información → Ejecutar de todos modos</b>. Después puedes borrar el .bat.</p>';
         });
       } else if (so === 'mac') {
-        baja(seguro + '.webloc', 'application/xml', '<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0"><dict><key>URL</key><string>' + u.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</string></dict></plist>
-');
+        baja(seguro + '.webloc', 'application/xml', '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><dict><key>URL</key><string>' + u.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</string></dict></plist>\n');
         $('dhow').innerHTML = '<p><b>Arrastra el archivo .webloc</b> al escritorio. (En Mac no puede llevar el icono elegido; para eso, instala el acceso con Chrome o Safari: Archivo → Añadir al Dock.)</p>';
       } else {
-        baja(seguro + '.desktop', 'application/x-desktop', '[Desktop Entry]
-Type=Link
-Name=' + seguro + '
-URL=' + u + '
-');
+        baja(seguro + '.desktop', 'application/x-desktop', '[Desktop Entry]\nType=Link\nName=' + seguro + '\nURL=' + u + '\n');
         $('dhow').innerHTML = '<p><b>Mueve el archivo .desktop</b> al escritorio y márcalo como «permitir ejecutar».</p>';
       }
     };
