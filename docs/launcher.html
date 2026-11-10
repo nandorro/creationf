@@ -32,7 +32,9 @@ button,a.b{display:block;width:100%;padding:14px;border-radius:14px;font:inherit
   <p class="u" id="u"></p>
   <a class="b p" id="abrir" href="#">Abrir ahora</a>
   <button class="p" id="inst" hidden>Instalar acceso en este dispositivo</button>
+  <button class="p" id="desk" hidden>Crear acceso directo en el escritorio</button>
   <a class="b s" href="index.html">Crear otro acceso</a>
+  <div class="how" id="dhow"></div>
   <div class="how" id="how"></div>
 </div>
 <div class="card" id="bad" hidden><h1>Acceso no válido</h1><p class="u">Falta la URL o no es http/https.</p><a class="b p" href="index.html">Volver a Creationf</a></div>
@@ -93,6 +95,70 @@ button,a.b{display:block;width:100%;padding:14px;border-radius:14px;font:inherit
     m.href = URL.createObjectURL(new Blob([JSON.stringify(man)], { type: 'application/manifest+json' }));
     document.head.appendChild(m);
   });
+
+
+  // ---- Acceso directo de escritorio (solo en PC) ----
+  var movil = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (!movil) {
+    var so = /Win/i.test(navigator.platform) ? 'win' : /Mac/i.test(navigator.platform) ? 'mac' : 'lin';
+    var seguro = n.replace(/[\\/:*?"<>|%'`$&^!]/g, '').trim() || 'Acceso';
+    var b64 = function (t) { var by = new TextEncoder().encode(t), s = ''; by.forEach(function (c) { s += String.fromCharCode(c); }); return btoa(s); };
+    var baja = function (nombre, tipo, datos) {
+      var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([datos], { type: tipo })); a.download = nombre;
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+    // ICO (PNG dentro de ICO, 256x256) a partir del icono elegido
+    var icoB64 = function () {
+      return png(256).then(function (d) {
+        if (!d) return null;
+        var raw = atob(d.split(',')[1]), png8 = new Uint8Array(raw.length);
+        for (var k = 0; k < raw.length; k++) png8[k] = raw.charCodeAt(k);
+        var h = new Uint8Array(22), v = new DataView(h.buffer);
+        v.setUint16(2, 1, true); v.setUint16(4, 1, true);          // tipo ICO, 1 imagen
+        h[6] = 0; h[7] = 0;                                        // 256x256
+        v.setUint16(10, 1, true); v.setUint16(12, 32, true);
+        v.setUint32(14, png8.length, true); v.setUint32(18, 22, true);
+        var all = new Uint8Array(22 + png8.length); all.set(h); all.set(png8, 22);
+        var s = ''; for (var k = 0; k < all.length; k++) s += String.fromCharCode(all[k]);
+        return btoa(s);
+      });
+    };
+    var hint = '';
+    $('desk').hidden = false;
+    if (so !== 'win') $('desk').textContent = so === 'mac' ? 'Descargar acceso directo (.webloc)' : 'Descargar acceso directo (.desktop)';
+    $('desk').onclick = function () {
+      if (so === 'win') {
+        icoB64().then(function (ico) {
+          var ps = "$l=Get-Content -LiteralPath '%~f0'; function G($k){ $x=($l|Where-Object{$_ -like ('::'+$k+' *')}) -replace ('^::'+$k+' '),''; [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String(($x -join ''))) }; " +
+            "$n=G 'N'; $u=G 'U'; $d=Join-Path $env:APPDATA 'Creationf'; New-Item -ItemType Directory -Force $d|Out-Null; $ico=Join-Path $d ($n+'.ico'); " +
+            "$x=($l|Where-Object{$_ -like '::I *'}) -replace '^::I ',''; if($x){[IO.File]::WriteAllBytes($ico,[Convert]::FromBase64String(($x -join '')))}; " +
+            "$f=Join-Path ([Environment]::GetFolderPath('Desktop')) ($n+'.url'); " +
+            "$t='[InternetShortcut]'+[char]13+[char]10+'URL='+$u+[char]13+[char]10; if($x){$t+='IconFile='+$ico+[char]13+[char]10+'IconIndex=0'+[char]13+[char]10}; " +
+            "[IO.File]::WriteAllText($f,$t,[Text.Encoding]::Default)";
+          var bat = ['@echo off', 'powershell -NoProfile -ExecutionPolicy Bypass -Command "' + ps + '"',
+            'echo Acceso "' + seguro + '" creado en el escritorio.', 'timeout /t 3 >nul', 'exit /b',
+            '::N ' + b64(seguro), '::U ' + b64(u), ico ? '::I ' + ico : ''].join('
+') + '
+';
+          baja('Crear acceso - ' + seguro + '.bat', 'application/octet-stream', bat);
+          $('dhow').innerHTML = '<p><b>Abre el archivo descargado</b> (.bat) y el acceso aparecerá en tu escritorio con el icono elegido. Si Windows avisa: <b>Más información → Ejecutar de todos modos</b>. Después puedes borrar el .bat.</p>';
+        });
+      } else if (so === 'mac') {
+        baja(seguro + '.webloc', 'application/xml', '<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict><key>URL</key><string>' + u.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</string></dict></plist>
+');
+        $('dhow').innerHTML = '<p><b>Arrastra el archivo .webloc</b> al escritorio. (En Mac no puede llevar el icono elegido; para eso, instala el acceso con Chrome o Safari: Archivo → Añadir al Dock.)</p>';
+      } else {
+        baja(seguro + '.desktop', 'application/x-desktop', '[Desktop Entry]
+Type=Link
+Name=' + seguro + '
+URL=' + u + '
+');
+        $('dhow').innerHTML = '<p><b>Mueve el archivo .desktop</b> al escritorio y márcalo como «permitir ejecutar».</p>';
+      }
+    };
+  }
 
   var ev = null;
   window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); ev = e; $('inst').hidden = false; });
